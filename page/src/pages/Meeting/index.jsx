@@ -10,6 +10,9 @@ import './index.less'
 const Meeting = () => {
   const userList = useSelector((store) => store.userList.userList)
 
+  const remoteVideoRef = useRef(null)
+  const videoRef = useRef(null)
+
   // 用户id
   const [userId, setUserId] = useState(undefined)
 
@@ -22,19 +25,34 @@ const Meeting = () => {
   const [video, setVideo] = useState(false)
   // 开启音频
   const [audio, setAudio] = useState(false)
-  const videoRef = useRef(null)
-  useEffect(() => {
-    if (video || audio) {
-      initMetia({ video: false, audio: true }, videoRef)
-    }
-  }, [video, audio])
+  // useEffect(() => {
+  //   if (video || audio) {
+  //     initMetia({ video: false, audio: true }, videoRef)
+  //   }
+  // }, [video, audio])
 
   useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.search)
-    const name = searchParams.get('name')
-    const userId = uuidv4()
-    setUserId(userId)
-    initSocket({ username: name, room: '1', userId })
+    async function fn() {
+      const searchParams = new URLSearchParams(window.location.search)
+      const name = searchParams.get('name')
+      const userId = uuidv4()
+      setUserId(userId)
+      let stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true,
+      })
+      console.log(stream)
+
+      videoRef.current.srcObject = stream
+      initSocket({
+        username: name,
+        room: '1',
+        userId,
+        remoteVideoRef,
+        localStream: stream,
+      })
+    }
+    fn()
   }, [])
   return (
     <div className="meeting">
@@ -45,9 +63,9 @@ const Meeting = () => {
         </div>
         <div className="list">
           <table />
-          {userList.map((item) => {
+          {userList.map((item, idx) => {
             return (
-              <div className="item">
+              <div className="item" key={idx}>
                 <div className="introduce">{item.username.slice(0, 1)}</div>
                 <div className="name">
                   {item.username}
@@ -59,7 +77,10 @@ const Meeting = () => {
           })}
         </div>
       </div>
-      <div className="right"></div>
+      <div className="right">
+        <video ref={videoRef} width="640" height="480" autoPlay></video>
+        <video ref={remoteVideoRef} width="640" height="480" autoPlay></video>
+      </div>
     </div>
   )
 }
