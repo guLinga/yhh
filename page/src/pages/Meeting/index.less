@@ -1,0 +1,65 @@
+@headerHeight: 40px;
+
+.meeting {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  background-color: #84192f;
+  .left {
+    width: 300px;
+    height: 100%;
+    background-color: white;
+    .header {
+      background-color: #f1f4f6;
+      height: @headerHeight;
+      display: flex;
+      .title {
+        flex: 1;
+        line-height: 35px;
+        font-weight: bold;
+        text-align: center;
+      }
+      .close {
+        width: @headerHeight;
+        height: @headerHeight;
+        line-height: 35px;
+        text-align: center;
+        font-size: 30px;
+        color: #6e7680;
+      }
+    }
+    .list {
+      overflow-y: auto;
+      height: calc(100% - @headerHeight);
+      .item {
+        padding-left: 20px;
+        cursor: pointer;
+        height: 40px;
+        margin: 3px 0 0 0;
+        display: flex;
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.1);
+        }
+        .introduce {
+          width: 30px;
+          height: 30px;
+          text-align: center;
+          margin-top: 5px;
+          line-height: 30px;
+          background-color: #84192f;
+          color: white;
+          border-radius: 5px;
+        }
+        .name {
+          flex: 1;
+          line-height: 40px;
+          padding-left: 10px;
+        }
+      }
+    }
+  }
+  .right {
+    flex: 1;
+    height: 100%;
+  }
+}
