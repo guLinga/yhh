@@ -1,23 +1,24 @@
+import { useRoutes } from "react-router";
+
+import Home from "./pages/Home";
+import Meeting from "./pages/Meeting";
+
 import './App.css';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  const element = useRoutes([
+    {
+      path: "/",
+      element: <Home />
+    },
+    {
+      path: "meeting",
+      element: <Meeting />
+    },
+  ]);
+
+  return element
+
 }
 
 export default App;
