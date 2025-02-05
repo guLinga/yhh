@@ -29,9 +29,23 @@ io.on('connection', (socket) => {
 
   // 断开链接
   socket.on('disconnect', () => {
+    // 删除断开的用户
     members = members.filter((m) => m.userId !== user.userId)
     // 断开连接发送用户列表
     io.to(room).emit('userList', members)
+  })
+
+  // 接收到《接收者》发送candidate连接成功消息，转发给《接收者》
+  socket.on('candidate', (room, candidate) => {
+    socket.to(room).emit('candidate', candidate)
+  })
+  // 接收到《发起者》发送offer，转发给《接收者》
+  socket.on('offer', (room, offer) => {
+    socket.to(room).emit('offer', offer)
+  })
+  // 接收到《接收者》发送answer，转发给《发起者》
+  socket.on('answer', (room, answer) => {
+    socket.to(room).emit('answer', answer)
   })
 })
 
