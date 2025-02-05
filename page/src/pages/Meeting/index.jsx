@@ -2,11 +2,16 @@ import { useState, useEffect, useRef, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { initMetia } from '../utils/media'
 import { initSocket } from '../utils/socket'
+
+import { v4 as uuidv4 } from 'uuid'
+
 import './index.less'
 
 const Meeting = () => {
   const userList = useSelector((store) => store.userList.userList)
-  console.log('data', userList)
+
+  // 用户id
+  const [userId, setUserId] = useState(undefined)
 
   // 参会者人数
   const peopleNumber = useMemo(() => {
@@ -27,7 +32,9 @@ const Meeting = () => {
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search)
     const name = searchParams.get('name')
-    initSocket({ username: name, room: '1' })
+    const userId = uuidv4()
+    setUserId(userId)
+    initSocket({ username: name, room: '1', userId })
   }, [])
   return (
     <div className="meeting">
@@ -42,7 +49,10 @@ const Meeting = () => {
             return (
               <div className="item">
                 <div className="introduce">{item.username.slice(0, 1)}</div>
-                <div className="name">{item.username}</div>
+                <div className="name">
+                  {item.username}
+                  {item.userId === userId && '（我）'}
+                </div>
                 <div className=""></div>
               </div>
             )

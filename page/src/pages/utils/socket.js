@@ -48,12 +48,18 @@ import { setUserList } from '../../store/userList'
 // };
 
 // 开始接听rtc协议连接
-export const initSocket = ({ username, room, remoteVideoRef, localStream }) => {
+export const initSocket = ({
+  username,
+  room,
+  userId,
+  remoteVideoRef,
+  localStream,
+}) => {
   // let localPc
   // 连接server 携带username和room
   const socket = io('http://localhost:3333', {
     // path: '/rtc',
-    query: { username, room },
+    query: { username, room, userId },
   }).connect()
 
   // console.log(socket);
